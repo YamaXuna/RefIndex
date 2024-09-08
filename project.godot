@@ -1,0 +1,60 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Resource",
+"class": "ImageData",
+"language": "GDScript",
+"path": "res://code/image_data.gd"
+}, {
+"base": "Reference",
+"class": "SQLiteWrapper",
+"language": "GDScript",
+"path": "res://addons/godot-sqlite/godot-sqlite-wrapper.gd"
+}, {
+"base": "VBoxContainer",
+"class": "image_item",
+"language": "GDScript",
+"path": "res://code/ImageItem.gd"
+} ]
+_global_script_class_icons={
+"ImageData": "",
+"SQLiteWrapper": "",
+"image_item": ""
+}
+
+[application]
+
+config/name="refIndex"
+run/main_scene="res://scenes/View.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="refIdexData"
+config/icon="res://icon.png"
+
+[autoload]
+
+DATA="*res://code/data_manager.gd"
+UTILS="*res://code/utils.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/godot-sqlite/plugin.cfg" )
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"

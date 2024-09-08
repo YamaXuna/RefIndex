@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://code/ImageItem.gd" type="Script" id=2]
+
+[node name="ImageItem" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_default_cursor_shape = 2
+script = ExtResource( 2 )
+
+[node name="image" type="TextureRect" parent="."]
+margin_right = 200.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 200, 200 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 1
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="image"]
+position = Vector2( 96, 96 )
+rect = Rect2( -100, -100, 200, 200 )
+
+[node name="name" type="Label" parent="."]
+margin_top = 204.0
+margin_right = 1024.0
+margin_bottom = 218.0
+text = "<image name>"
+autowrap = true
+
+[node name="selection_timer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="screen_entered" from="image/VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_entered"]
+[connection signal="timeout" from="selection_timer" to="." method="_on_selection_timer_timeout"]
