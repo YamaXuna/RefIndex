@@ -3,13 +3,14 @@ extends PanelContainer
 
 const ImageItem = preload("res://scenes/ImageItem.tscn")
 
-export var img_size := 100
+export var img_size := 200
 export(String) var supported_formats := "png,bmp,dds,exr,hdr,jpg,jpeg,webp,svg"
+var additional_formats := ""
 export(bool) var check_extension_for_single_files := false
 
 signal menu_opened(item)
 
-onready var supported_extensions := supported_formats.split(",")
+onready var supported_extensions : Array 
 
 onready var file_select := $FileDialog
 onready var image_grid := $VBoxContainer/ScrollContainer/GridContainer
@@ -21,13 +22,19 @@ onready var popup_menu := $PopupMenu
 var selected_items := []
 var paths_to_add := []
 
-var slider : HSlider
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-#	set_grid_columns()
-	pass
+	set_supported_extensions()
+
+
+func set_supported_extensions()->void:
+	var exts := supported_formats.split(",")
+	
+	exts.append_array(additional_formats.replace(".", "").split(","))
+	
+	supported_extensions = exts
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -138,6 +145,13 @@ func add_file_path_from_dir(path):
 #	DATA.add_image(path)
 
 
+func set_icon_size(size : int)->void:
+	img_size = size
+	for item in image_grid.get_children():
+		item.img_size = img_size
+		item.set_image_scale()
+
+
 func _on_FileDialog_dir_selected(path):
 	var dir = Directory.new()
 	if dir.open(path) != OK:
@@ -199,13 +213,6 @@ func _on_selectAll_pressed():
 		selected_items.append(item)
 
 
-func _on_HSlider_drag_ended(value_changed):
-	if not value_changed:
-		return
-#	print(slider.value)
-	img_size = int(slider.value)
-	for item in image_grid.get_children():
-		item.img_size = img_size
-		item.set_image_scale()
-	
-#	set_grid_columns()
+func _on_LineEdit_text_changed(new_text):
+	additional_formats = new_text
+	set_supported_extensions()

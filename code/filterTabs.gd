@@ -18,7 +18,12 @@ func _ready():
 
 func show()->void:
 	fill()
-	current_tab = 1
+	
+	if get_child_count() > 2:
+		current_tab = 2
+	else:
+		current_tab = 1
+	
 	.show()
 
 
@@ -40,9 +45,12 @@ func add_new_tab(name : String):
 
 
 func fill()->void:
-	var node := Control.new()
-	node.name = "Close"
-	add_child(node)
+	var action_tabs := ["Close", "Clear"]
+	for string in action_tabs:
+		var node := Control.new()
+		node.name = string
+		add_child(node)
+
 	var current_letter = ""
 	var current_tab
 #	print(DATA.get_all_tags())
@@ -74,6 +82,10 @@ func get_selected_filters()->Array:
 
 
 
-func _on_uncheck_pressed():
+func uncheck_all()->void:
 	for box in all_filters.values():
 		box.pressed = false
+
+
+func _on_uncheck_pressed():
+	uncheck_all()

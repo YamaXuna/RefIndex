@@ -11,6 +11,7 @@ onready var edit_tags_popup := $editTags
 onready var tabs := $ImageDisplay/VBoxContainer2/VBoxContainer/TabContainer
 onready var filter_menu := $ImageDisplay/VBoxContainer2
 onready var filter_list := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/filters
+onready var settings := $SettingsWindow
 
 
 var current_menu_items : Array
@@ -18,13 +19,17 @@ var previous_filters := []
 
 var current_references := []
 
+var previous_filter_tab := 0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+#	UTILS.get_app_resources()
+#	UTILS.set_app_resource("additional_extensions", "kra")
 	var __ = image_display.connect("menu_opened", self, "_on_menu_opened")
 	load_images()
 	hide_filter_menu()
-	image_display.slider = $ImageDisplay/VBoxContainer/HSlider
+	image_display.set_icon_size(UTILS.get_app_resources()["icon_size"])
 	
 
 
@@ -112,6 +117,12 @@ func _on_TabContainer_tab_selected(tab):
 	if tab == 0:
 		hide_filter_menu()
 		set_filters()
+	if tab == 1:
+		tabs.uncheck_all()
+		tabs.current_tab = previous_filter_tab
+	
+	if tab > 1:
+		previous_filter_tab = tab
 
 
 func _on_addRef_pressed():
@@ -172,3 +183,17 @@ func _notification(what: int) -> void:
 		if not OS.has_feature("standalone"):
 			purge_references(Directory.new())
 		get_tree().quit()
+
+
+func _on_settings_pressed():
+	settings.slider.value = image_display.img_size
+	settings.show()
+
+
+func _on_HSlider_value_changed(value):
+	image_display.set_icon_size(value)
+
+
+func _on_LineEdit_text_changed(new_text):
+	UTILS.set_app_resource("additional_extensions", new_text)
+

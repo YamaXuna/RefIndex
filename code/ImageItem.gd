@@ -21,6 +21,7 @@ var selected := false
 var is_under_mouse := false
 
 var is_loaded := false
+var load_failed := false
 
 var thread := Thread.new()
 var texture : Texture
@@ -72,6 +73,7 @@ func background_loading(path)->Texture:
 
 
 func on_load_fail()->void:
+	load_failed = true
 	var __ = thread.wait_to_finish()
 
 
@@ -81,6 +83,7 @@ func on_background_loading_complete()->void:
 	
 	if tex == null:
 		push_error(image_path + " could not be loaded")
+		load_failed = true
 		return
 	is_loaded = true
 	image_display.texture = tex
@@ -111,6 +114,6 @@ func _on_selection_timer_timeout():
 
 
 func _on_VisibilityNotifier2D_screen_entered():
-	if is_loaded:
+	if is_loaded or load_failed:
 		return
 	load_image()

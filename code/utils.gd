@@ -1,5 +1,9 @@
 extends Node
 
+const RES_PATH = "data/data.tres"
+
+onready var app_ressources : Resource = get_app_resources()
+
 
 func for_each_files(var root_path:String, var on_file:FuncRef):
 	"""
@@ -41,3 +45,19 @@ func image_items_to_path_list(items : Array)-> Array:
 	for item in items:
 		paths.append(item.image_path)
 	return paths
+
+
+func get_app_resources()->Resource:
+	var res : Data
+	if not ResourceLoader.exists(RES_PATH):
+		res = Data.new()
+	else:
+		res = ResourceLoader.load(RES_PATH)
+	
+	return res
+
+
+func set_app_resource(key : String, value)->void:
+	app_ressources[key] = value
+	
+	var _err = ResourceSaver.save(RES_PATH, app_ressources)

@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
+"class": "Data",
+"language": "GDScript",
+"path": "res://code/data.gd"
+}, {
+"base": "Resource",
 "class": "ImageData",
 "language": "GDScript",
 "path": "res://code/image_data.gd"
@@ -25,6 +30,7 @@ _global_script_classes=[ {
 "path": "res://code/ImageItem.gd"
 } ]
 _global_script_class_icons={
+"Data": "",
 "ImageData": "",
 "SQLiteWrapper": "",
 "image_item": ""
