@@ -141,6 +141,7 @@ size_flags_horizontal = 3
 margin_left = 957.0
 margin_right = 1006.0
 margin_bottom = 20.0
+disabled = true
 text = "filters"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ImageDisplay/VBoxContainer"]

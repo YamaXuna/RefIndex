@@ -1,9 +1,11 @@
 extends Node
 
+signal has_tags(status)
+
 const SQL = preload("res://addons/godot-sqlite/bin/gdsqlite.gdns")
 const PATH = "res://data/db.db"
 
-var clear_db_on_start := true
+var clear_db_on_start := false
 var db : SQL
 
 
@@ -119,10 +121,14 @@ func delete_unused_tags()->int:
 	var count : int = db.query_result[0]["count(*)"]
 	db.query("delete from tag where tag_id not in(" +
 		"select tag_id from has_tag)")
+	
+	emit_signal("has_tags", nb_tags())
 	return count
 
 
 func add_tag_to_image(image_path : String, tag_name : String)->void:
+	if nb_tags() == 0:
+		emit_signal("has_tags", true)
 	if not is_in_db(image_path):
 		return
 	if not is_tag_in_db(tag_name):
@@ -184,6 +190,11 @@ func get_filtered(filters : Array)->Array:
 func get_all_tags()->Array:
 	db.query("select tag_id, name from tag order by name")
 	return db.query_result
+
+
+func nb_tags()->int:
+	db.query("select count(*) from tag")
+	return db.query_result[0]["count(*)"]
 
 
 func get_image_tags(path : String)->Array:

@@ -1,2 +1,6 @@
 .import
 references
+data/data.tres
+data/db.db
+data/help
+data/test.sql

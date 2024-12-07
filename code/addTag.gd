@@ -12,6 +12,7 @@ onready var new_tag_line_edit := $HBoxContainer/VBoxContainer2/HBoxContainer/Lin
 onready var list := $HBoxContainer/VBoxContainer2/OptionButton
 
 
+
 var image_item
 
 var is_multi := false

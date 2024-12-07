@@ -9,6 +9,7 @@ onready var image_grid := $ImageDisplay/VBoxContainer/ScrollContainer/GridContai
 onready var add_tag_popup := $addTag
 onready var edit_tags_popup := $editTags
 onready var tabs := $ImageDisplay/VBoxContainer2/VBoxContainer/TabContainer
+onready var filter_button := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/filterMenu
 onready var filter_menu := $ImageDisplay/VBoxContainer2
 onready var filter_list := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/filters
 onready var settings := $SettingsWindow
@@ -27,12 +28,15 @@ func _ready():
 #	UTILS.get_app_resources()
 #	UTILS.set_app_resource("additional_extensions", "kra")
 	var __ = image_display.connect("menu_opened", self, "_on_menu_opened")
+	__ = DATA.connect("has_tags", self, "_on_data_has_tags")
 	load_images()
 	hide_filter_menu()
 	image_display.set_icon_size(UTILS.get_app_resources()["icon_size"])
 	
+	filter_button.disabled = DATA.nb_tags() == 0
 
-
+func _draw():
+	print("rytr")
 
 
 func load_images()->void:
@@ -168,7 +172,7 @@ func _on_dump_pressed():
 #	create .gdignore to prevent the editor from importing it
 	if OS.is_debug_build():
 		var file := File.new()
-		file.open(path + "/.gdignore", File.WRITE)
+		var __ = file.open(path + "/.gdignore", File.WRITE)
 		file.close()
 	
 	purge_references(dir)
@@ -182,7 +186,7 @@ func _on_dump_pressed():
 	open_ref_dir()
 
 
-#will purge dumped references if running in the editor to prevent Godot importing all the files
+#will purge dumped references if running in the editor
 func _notification(what: int) -> void:
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
 		if not OS.has_feature("standalone"):
@@ -202,3 +206,6 @@ func _on_HSlider_value_changed(value):
 func _on_LineEdit_text_changed(new_text):
 	UTILS.set_app_resource("additional_extensions", new_text)
 
+
+func _on_data_has_tags(state)->void:
+	filter_button.disabled = not state
