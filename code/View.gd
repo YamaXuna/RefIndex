@@ -155,7 +155,8 @@ func open_ref_dir()->void:
 		"Windows":
 			var out = []
 			var __ = OS.execute("data\\open.bat", [], false, out)
-	print("OS : ", OS.get_name())
+		"X11":
+			var __ = OS.execute("xdg-open", ["references/"])
 
 
 func _on_dump_pressed():
