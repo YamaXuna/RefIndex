@@ -165,14 +165,15 @@ func _on_dump_pressed():
 			push_error("couldn't create " + path)
 			return
 	
-	var file := File.new()
-	file.open(path + "/.gdignore", File.WRITE)
-	file.close()
+#	create .gdignore to prevent the editor from importing it
+	if OS.is_debug_build():
+		var file := File.new()
+		file.open(path + "/.gdignore", File.WRITE)
+		file.close()
 	
 	purge_references(dir)
 	
 	for image in current_references:
-#		print("/" + path.get_file())
 		var err = dir.copy(image, path + "/" + image.get_file())
 		
 		if err != OK:
