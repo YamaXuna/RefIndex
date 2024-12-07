@@ -3,7 +3,7 @@ extends Node
 const SQL = preload("res://addons/godot-sqlite/bin/gdsqlite.gdns")
 const PATH = "res://data/db.db"
 
-var clear_db_on_start := false
+var clear_db_on_start := true
 var db : SQL
 
 

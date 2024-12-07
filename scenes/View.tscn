@@ -23,6 +23,7 @@ margin_left = 351.0
 margin_top = 28.0
 margin_right = 1015.0
 margin_bottom = 431.0
+rect_min_size = Vector2( 150, 52.5 )
 window_title = "Ouvrir un fichier ou un répertoire"
 resizable = true
 mode = 3
