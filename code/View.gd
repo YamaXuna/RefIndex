@@ -137,7 +137,7 @@ func purge_references(dir : Directory)->void:
 		var err = dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
-			if not dir.current_is_dir():
+			if not dir.current_is_dir() and not file_name == ".gdignore":
 				err = dir.remove(file_name)
 				if err != OK:
 					print(file_name + " not purged")
@@ -154,7 +154,7 @@ func open_ref_dir()->void:
 		"Windows":
 			var out = []
 			var __ = OS.execute("data\\open.bat", [], false, out)
-	print(OS.get_name())
+	print("OS : ", OS.get_name())
 
 
 func _on_dump_pressed():
@@ -164,6 +164,10 @@ func _on_dump_pressed():
 		if dir.make_dir(path) != OK:
 			push_error("couldn't create " + path)
 			return
+	
+	var file := File.new()
+	file.open(path + "/.gdignore", File.WRITE)
+	file.close()
 	
 	purge_references(dir)
 	
