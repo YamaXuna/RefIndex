@@ -57,6 +57,10 @@ func set_info_text_to_deleted(n : int)->void:
 	set_info_text_to(str(n) + " elements deleted")
 
 
+func set_info_text_to_dumped(n : int)->void:
+	set_info_text_to("dumped "+ str(n) + " elements")
+
+
 func set_info_text_to_tags_purged(n : int)->void:
 	set_info_text_to(str(n) + " tags purged")
 

@@ -35,9 +35,6 @@ func _ready():
 	
 	filter_button.disabled = DATA.nb_tags() == 0
 
-func _draw():
-	print("rytr")
-
 
 func load_images()->void:
 	image_display.refresh_items()
@@ -177,12 +174,16 @@ func _on_dump_pressed():
 	
 	purge_references(dir)
 	
+	var i := 0
 	for image in current_references:
 		var err = dir.copy(image, path + "/" + image.get_file())
 		
 		if err != OK:
 			print("failed to dump " + image + " to " + path + "/" + image.get_file())
+		else:
+			i += 1
 	
+	image_display.set_info_text_to_dumped(i)
 	open_ref_dir()
 
 
