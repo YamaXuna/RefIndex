@@ -1,6 +1,6 @@
 extends Node
 
-const MAX_LOADING_ITEMS = 2
+const MAX_LOADING_ITEMS = 3
 
 
 

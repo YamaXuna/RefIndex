@@ -125,8 +125,8 @@ func validate_single(from_list : bool = false)->void:
 	reset()
 
 
-func validate_multi()->void:
-	if not new_tag_line_edit.text.empty():
+func validate_multi(from_list : bool = false)->void:
+	if not new_tag_line_edit.text.empty() and not from_list:
 		DATA.add_tag_to_many(UTILS.image_items_to_path_list(items), new_tag_line_edit.text.to_lower())
 	else:
 		DATA.add_tag_to_many(UTILS.image_items_to_path_list(items), list.get_item_text(list.selected).to_lower())
@@ -136,8 +136,9 @@ func validate_multi()->void:
 func validate(from_list : bool = false)->void:
 	if from_list and list.selected == -1:
 		return
+	
 	if is_multi:
-		validate_multi()
+		validate_multi(from_list)
 	else:
 		validate_single(from_list)
 

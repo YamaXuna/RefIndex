@@ -37,7 +37,7 @@ func _ready():
 
 func select()->void:
 	selected = true
-	image_display.modulate = Color.red
+	image_display.modulate = Color.aquamarine
 
 
 func deselect()->void:
@@ -71,7 +71,7 @@ func background_loading(path)->Texture:
 		return null
 	
 	if image.get_size().x > 1000 and image.get_size().y > 1000:
-		image.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_GENERIC, 0.2)
+		image.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_GENERIC, 0.001)
 	texture = ImageTexture.new()
 	texture.create_from_image(image)
 	
