@@ -20,6 +20,7 @@ expand = true
 stretch_mode = 1
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="image"]
+visible = false
 position = Vector2( 96, 96 )
 rect = Rect2( -100, -100, 200, 200 )
 
@@ -36,4 +37,5 @@ one_shot = true
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="screen_entered" from="image/VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_entered"]
+[connection signal="screen_exited" from="image/VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
 [connection signal="timeout" from="selection_timer" to="." method="_on_selection_timer_timeout"]

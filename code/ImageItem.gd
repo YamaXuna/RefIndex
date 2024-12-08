@@ -5,6 +5,9 @@ class_name image_item
 export var img_size := 200
 export var name_max_length := 35
 
+
+signal thread_end(item)
+
 signal left_clicked(item)
 signal right_clicked(item)
 
@@ -29,7 +32,7 @@ var texture : Texture
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	set_path_display()
 
 
 func select()->void:
@@ -42,10 +45,16 @@ func deselect()->void:
 	image_display.modulate = Color.white
 
 
+func set_path_display()->void:
+	label.text = image_path.get_file().substr(0, name_max_length)
+	hint_tooltip = image_path
+
+
 func load_image()->void:
 	if thread.is_active():
 		# Already working
 		return
+	
 	var error = thread.start(self, "background_loading", image_path)
 	if error != OK:
 		push_error("thread could not be started")
@@ -54,8 +63,7 @@ func load_image()->void:
 func background_loading(path)->Texture:
 	var image = Image.new()
 	var error = image.load(path)
-	label.text = image_path.get_file().substr(0, name_max_length)
-	hint_tooltip = image_path
+	
 
 	if error != OK:
 		print(image_path + " format cannot be displayed")
@@ -75,12 +83,13 @@ func background_loading(path)->Texture:
 func on_load_fail()->void:
 	load_failed = true
 	var __ = thread.wait_to_finish()
+	emit_signal("thread_end")
 
 
 func on_background_loading_complete()->void:
 	# Wait for the thread to complete, get the returned value
 	var tex = thread.wait_to_finish()
-	
+	emit_signal("thread_end", self)
 	if tex == null:
 		push_error(image_path + " could not be loaded")
 		load_failed = true
@@ -97,6 +106,11 @@ func set_image_scale()->void:
 	image_display.rect_min_size.x = image_display.texture.get_size().x * scale_x
 	image_display.rect_min_size.y = image_display.texture.get_size().y * scale_y
 
+
+func queue_free()->void:
+	if thread.is_active():
+		yield(self, "thread_end")
+	.queue_free()
 
 
 func _on_gui_input(event):
@@ -116,4 +130,9 @@ func _on_selection_timer_timeout():
 func _on_VisibilityNotifier2D_screen_entered():
 	if is_loaded or load_failed:
 		return
-	load_image()
+#	load_image()
+	LOADER.queue(self)
+
+
+func _on_VisibilityNotifier2D_screen_exited():
+	LOADER.remove(self)

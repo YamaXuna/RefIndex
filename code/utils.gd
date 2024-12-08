@@ -1,8 +1,14 @@
 extends Node
 
+
+
 const RES_PATH = "data/data.tres"
 
 onready var app_ressources : Resource = get_app_resources()
+
+
+
+
 
 
 func for_each_files(var root_path:String, var on_file:FuncRef):

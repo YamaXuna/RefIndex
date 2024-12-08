@@ -22,6 +22,7 @@ onready var popup_menu := $PopupMenu
 var selected_items := []
 var paths_to_add := []
 
+var shrek = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -68,6 +69,7 @@ func set_info_text_to_tags_purged(n : int)->void:
 func refresh_items(filters : Array = [])->void:
 	for item in image_grid.get_children():
 		item.queue_free()
+
 	var items : Array
 	if len(filters) > 0:
 		items = DATA.get_filtered(filters)
@@ -75,6 +77,7 @@ func refresh_items(filters : Array = [])->void:
 		items = DATA.get_all()
 	for item in items:
 		add_item(item["path"])
+	
 
 
 func add_item(path : String)->void:
