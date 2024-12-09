@@ -163,7 +163,7 @@ func remove_tag_from_image(image_path : String, tag_name : String)->void:
 ### get ###
 
 func get_all()->Array:
-	db.query("select path from image order by name")
+	db.query("select path from image order by lower(name)")
 	return db.query_result
 
 
@@ -180,7 +180,7 @@ func get_filtered(filters : Array)->Array:
 	
 	for i in range(1, len(filters)):
 		sql += " and t%s.tag_id = (select tag_id from tag where name = lower(?))\n" % [i]
-	sql += ") order by name"
+	sql += ") order by lower(name)"
 	
 	db.query_with_bindings(sql, filters.duplicate())
 	
@@ -188,7 +188,7 @@ func get_filtered(filters : Array)->Array:
 
 
 func get_all_tags()->Array:
-	db.query("select tag_id, name from tag order by name")
+	db.query("select tag_id, name from tag order by lower(name)")
 	return db.query_result
 
 
@@ -201,7 +201,7 @@ func get_image_tags(path : String)->Array:
 	db.query_with_bindings("select t.name from image " + 
 		"join has_tag using(img_id) " +
 		"join tag t using(tag_id) " +
-		"where path = ? order by t.name",
+		"where path = ? order by lower(t.name)",
 	[path])
 	return db.query_result
 
@@ -217,7 +217,7 @@ func get_tags_in_common(paths : Array)->Array:
 			where img_id = (select img_id from image where path = ?)"""
 		if i < len(paths) - 1:
 			sql += " intersect "
-	sql += ") order by name"
+	sql += ") order by lower(name)"
 	db.query_with_bindings(sql, paths)
 
 	return db.query_result
