@@ -71,13 +71,23 @@ func background_loading(path)->Texture:
 		return null
 	
 	if image.get_size().x > 1000 and image.get_size().y > 1000:
-		image.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_GENERIC, 0.001)
+#		image.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_GENERIC, 0.001)
+		resize_image(image)
 	texture = ImageTexture.new()
 	texture.create_from_image(image)
 	
 	call_deferred("on_background_loading_complete")
 	
 	return texture
+
+
+func resize_image(image : Image)->void:
+	var scale := Vector2(img_size / image.get_size().x, img_size / image.get_size().y)
+#	var scale_x : float = img_size / image.get_size().x
+#	var scale_y : float = img_size / image.get_size().y
+	
+	var new_size := Vector2(image.get_size().x * scale.x, image.get_size().y * scale.y)
+	image.resize(int(new_size.x), int(new_size.y))
 
 
 func on_load_fail()->void:
