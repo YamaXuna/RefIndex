@@ -2,9 +2,6 @@ extends VBoxContainer
 
 class_name image_item
 
-export var img_size := 200
-export var name_max_length := 35
-
 
 signal thread_end(item)
 
@@ -12,13 +9,20 @@ signal left_clicked(item)
 signal right_clicked(item)
 
 
+export var img_size := 200
+export var name_max_length := 35
+export(String) var image_path := ""
+
+
 var default_texture = preload("res://icon.png")
 
 onready var image_display := $image
 onready var label := $name
 onready var timer := $selection_timer
+onready var resized_timer := $resized_timer
+onready var unload_timer := $unload_timer
+onready var visibility_notifier := $image/VisibilityNotifier2D
 
-export(String) var image_path := ""
 
 var selected := false
 var is_under_mouse := false
@@ -28,6 +32,7 @@ var load_failed := false
 
 var thread := Thread.new()
 var texture : Texture
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -71,7 +76,13 @@ func background_loading(path)->Texture:
 		return null
 	
 	if image.get_size().x > 1000 and image.get_size().y > 1000:
+#		if img_size <= 200:
+#			resize_image(image)
+#		else:
+#			print("rr")
+#			image.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_GENERIC, 0.2)
 		resize_image(image)
+		
 	texture = ImageTexture.new()
 	texture.create_from_image(image)
 	
@@ -114,6 +125,7 @@ func set_image_scale()->void:
 
 
 func queue_free()->void:
+	unload_timer.stop()
 	if thread.is_active():
 		yield(self, "thread_end")
 	.queue_free()
@@ -126,7 +138,6 @@ func _on_gui_input(event):
 			timer.start()
 		elif event.button_index == BUTTON_RIGHT and event.pressed:
 			emit_signal("right_clicked", self)
-	
 
 
 func _on_selection_timer_timeout():
@@ -134,10 +145,31 @@ func _on_selection_timer_timeout():
 
 
 func _on_VisibilityNotifier2D_screen_entered():
+	unload_timer.stop()
 	if is_loaded or load_failed:
 		return
 	load_image()
 
 
 func _on_VisibilityNotifier2D_screen_exited():
+	if unload_timer.is_inside_tree():
+		unload_timer.start()
+
+
+func _on_ImageItem_resized():
+	if is_loaded:
+		if visibility_notifier.is_on_screen():
+			resized_timer.start()
+		else:
+			is_loaded = false
+
+
+func _on_resized_timer_timeout():
+	load_image()
 	pass
+	
+
+
+func _on_unload_timer_timeout():
+	image_display.texture = default_texture
+	is_loaded = false

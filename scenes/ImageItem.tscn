@@ -35,7 +35,17 @@ autowrap = true
 wait_time = 0.1
 one_shot = true
 
+[node name="resized_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="unload_timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="resized" from="." to="." method="_on_ImageItem_resized"]
 [connection signal="screen_entered" from="image/VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_entered"]
 [connection signal="screen_exited" from="image/VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
 [connection signal="timeout" from="selection_timer" to="." method="_on_selection_timer_timeout"]
+[connection signal="timeout" from="resized_timer" to="." method="_on_resized_timer_timeout"]
+[connection signal="timeout" from="unload_timer" to="." method="_on_unload_timer_timeout"]
