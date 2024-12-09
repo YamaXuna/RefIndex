@@ -71,7 +71,6 @@ func background_loading(path)->Texture:
 		return null
 	
 	if image.get_size().x > 1000 and image.get_size().y > 1000:
-#		image.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_GENERIC, 0.001)
 		resize_image(image)
 	texture = ImageTexture.new()
 	texture.create_from_image(image)
@@ -83,9 +82,6 @@ func background_loading(path)->Texture:
 
 func resize_image(image : Image)->void:
 	var scale := Vector2(img_size / image.get_size().x, img_size / image.get_size().y)
-#	var scale_x : float = img_size / image.get_size().x
-#	var scale_y : float = img_size / image.get_size().y
-	
 	var new_size := Vector2(image.get_size().x * scale.x, image.get_size().y * scale.y)
 	image.resize(int(new_size.x), int(new_size.y))
 
@@ -140,9 +136,8 @@ func _on_selection_timer_timeout():
 func _on_VisibilityNotifier2D_screen_entered():
 	if is_loaded or load_failed:
 		return
-#	load_image()
-	LOADER.queue(self)
+	load_image()
 
 
 func _on_VisibilityNotifier2D_screen_exited():
-	LOADER.remove(self)
+	pass

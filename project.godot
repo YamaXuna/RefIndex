@@ -48,7 +48,6 @@ config/icon="res://icon.png"
 
 DATA="*res://code/data_manager.gd"
 UTILS="*res://code/utils.gd"
-LOADER="*res://code/loader.gd"
 
 [editor_plugins]
 
