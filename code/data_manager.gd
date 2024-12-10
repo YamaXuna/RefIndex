@@ -24,7 +24,7 @@ func init_db()->void:
 		"img_id" : {"data_type" : "int", "primary_key" : true, "auto_increment" : true},
 		"path" : {"data_type" : "char(300)", "not_null" : true, "unique" : true},
 		"name" : {"data_type" : "char(64)", "not_null" : true, "unique" : false},
-		"hash" : {"data_type" : "char(256)", "not_null" : false, "unique" : false}
+		"hash" : {"data_type" : "char(256)", "not_null" : true, "unique" : false}
 	})
 	db.create_table("tag",{
 		"tag_id" : {"data_type" : "int", "primary_key" : true, "auto_increment" : true},
@@ -66,8 +66,10 @@ func save_tag(name : String)->void:
 
 func is_in_db(path : String)->bool:
 	var file := File.new()
+	var h : String =  file.get_md5(path)
+
 	db.query_with_bindings("select count(*) from image where path = ?" +
-		" or hash = ?", [path, file.get_md5(path)])
+		" or hash = ?", [path, h])
 	
 	return db.query_result[0]["count(*)"] > 0
 
@@ -94,12 +96,14 @@ func add_image(path : String):
 
 func add_many(paths : Array)->void:
 	var rows := []
+	var file := File.new()
 	
 	for path in paths:
 		if not is_in_db(path):
 			rows.append({
 				"path" : path,
-				"name" : path.get_file()
+				"name" : path.get_file(),
+				"hash" : file.get_md5(path)
 			})
 	
 	db.insert_rows("image", rows)
