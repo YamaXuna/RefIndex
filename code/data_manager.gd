@@ -23,7 +23,8 @@ func init_db()->void:
 	db.create_table("image", {
 		"img_id" : {"data_type" : "int", "primary_key" : true, "auto_increment" : true},
 		"path" : {"data_type" : "char(300)", "not_null" : true, "unique" : true},
-		"name" : {"data_type" : "char(64)", "not_null" : true, "unique" : false}
+		"name" : {"data_type" : "char(64)", "not_null" : true, "unique" : false},
+		"hash" : {"data_type" : "char(256)", "not_null" : false, "unique" : false}
 	})
 	db.create_table("tag",{
 		"tag_id" : {"data_type" : "int", "primary_key" : true, "auto_increment" : true},
@@ -46,7 +47,10 @@ func open_db()->void:
 func save_image(path : String)->void:
 	if is_in_db(path):
 		return
-	var ret = db.insert_row("image", {"path" : path, "name": path.get_file()})
+	var file := File.new()
+	var ret = db.insert_row("image", {
+		"path" : path, "name": path.get_file(), "hash" : file.get_md5(path)
+		})
 	if not ret:
 		print(db.error_message)
 
@@ -61,7 +65,10 @@ func save_tag(name : String)->void:
 
 
 func is_in_db(path : String)->bool:
-	db.query_with_bindings("select count(*) from image where path = ?", [path])
+	var file := File.new()
+	db.query_with_bindings("select count(*) from image where path = ?" +
+		" or hash = ?", [path, file.get_md5(path)])
+	
 	return db.query_result[0]["count(*)"] > 0
 
 

@@ -168,12 +168,21 @@ func _on_FileDialog_dir_selected(path):
 	var f_ref := funcref(self, "add_file_path_from_dir")
 	
 	UTILS.for_each_files(path, f_ref)
-	set_info_text_to_added(len(paths_to_add))
 	
+	var i := 0
+	var hashes := []
+	var file := File.new()
+	var paths := []
 	for path in paths_to_add:
-		if not DATA.is_in_db(path):
+		var current_file_md5 : String = file.get_md5(path)
+		if not DATA.is_in_db(path) and not current_file_md5 in hashes:
+			hashes.append(current_file_md5)
 			add_item(path)
-	DATA.add_many(paths_to_add)
+			paths.append(path)
+			i += 1
+	
+	DATA.add_many(paths)
+	set_info_text_to_added(i)
 	paths_to_add.clear()
 
 
