@@ -8,12 +8,7 @@ signal refreshed()
 const ImageItem = preload("res://scenes/ImageItem.tscn")
 
 export var img_size := 200
-export(String) var supported_formats := "png,bmp,dds,exr,hdr,jpg,jpeg,webp,svg"
 
-export(bool) var check_extension_for_single_files := false
-
-
- 
 onready var file_select := $FileDialog
 onready var image_grid := $VBoxContainer/ScrollContainer/GridContainer
 onready var alert_popup := $AlertPopup
@@ -22,6 +17,7 @@ onready var popup_menu := $PopupMenu
 
 
 var supported_extensions : Array
+var check_extension_for_single_files := false
 
 var selected_items := []
 var paths_to_add := []
@@ -31,9 +27,11 @@ var paths_to_add := []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_supported_extensions()
+	check_extension_for_single_files = UTILS.get_app_resources()["check_extension_for_single_files"]
 
 
 func set_supported_extensions()->void:
+	var supported_formats : String = UTILS.get_app_resources()["default_extensions"]
 	var exts := supported_formats.split(",")
 	var additional_formats = UTILS.get_app_resources()["additional_extensions"]
 	exts.append_array(additional_formats.replace(".", "").split(","))
@@ -107,6 +105,7 @@ func add_item(path : String)->void:
 
 func on_new_file(path : String, alert :bool = false)->bool:
 	if check_extension_for_single_files and not path.get_extension() in supported_extensions:
+		show_alert(path.get_extension() + " files are not allowed")
 		return false
 	if DATA.is_in_db(path) and alert:
 		set_info_text_to("add failed")

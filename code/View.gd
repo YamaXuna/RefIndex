@@ -221,3 +221,8 @@ func _on_Search_text_changed(new_text):
 
 func _on_ImageDisplay_refreshed():
 	image_display.hide_if_not_contains(search_line_edit.text)
+
+
+func _on_CheckBox_toggled(button_pressed):
+	UTILS.set_app_resource("check_extension_for_single_files", button_pressed)
+	image_display.check_extension_for_single_files = button_pressed

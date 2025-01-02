@@ -5,6 +5,7 @@ onready var slider := $VBoxContainer/HBoxContainer/HSlider
 onready var icon_size_label := $VBoxContainer/HBoxContainer/Label
 onready var extensions_text := $VBoxContainer/HBoxContainer2/LineEdit
 onready var default_extensions_label := $VBoxContainer/DefaultExtensions
+onready var check_extension_box := $VBoxContainer/HBoxContainer3/CheckBox
 
 
 # Called when the node enters the scene tree for the first time.
@@ -17,8 +18,10 @@ func set_icon_size_text(size : int)->void:
 
 
 func show():
-	default_extensions_label.text = "Supported formats : %s" % [""]
+	default_extensions_label.text = "Supported formats : %s" % [UTILS.get_app_resources()[
+		"default_extensions"]]
 	extensions_text.text = UTILS.get_app_resources()["additional_extensions"]
+	check_extension_box.pressed = UTILS.get_app_resources()["check_extension_for_single_files"]
 	set_icon_size_text(slider.value)
 	.show()
 

@@ -143,7 +143,7 @@ margin_left = 753.0
 margin_right = 953.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 200, 0 )
-placeholder_text = "Search images and/or tags"
+placeholder_text = "Search images"
 
 [node name="filterMenu" type="Button" parent="ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer"]
 margin_left = 957.0
@@ -174,11 +174,14 @@ margin_bottom = 586.0
 margin_bottom = 14.0
 
 [node name="AlertPopup" type="AcceptDialog" parent="ImageDisplay"]
+visible = true
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 1017.0
-margin_bottom = 593.0
+margin_right = 512.0
+margin_bottom = 300.0
+popup_exclusive = true
 window_title = "Alerte !"
+resizable = true
 
 [node name="PopupMenu" type="PopupMenu" parent="ImageDisplay"]
 margin_left = 478.0
@@ -385,7 +388,6 @@ margin_bottom = 20.0
 text = "Confirm"
 
 [node name="SettingsWindow" type="WindowDialog" parent="."]
-visible = true
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -426,12 +428,16 @@ value = 50.0
 [node name="DefaultExtensions" type="RichTextLabel" parent="SettingsWindow/VBoxContainer"]
 margin_top = 20.0
 margin_right = 628.0
-margin_bottom = 20.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 15 )
+focus_mode = 2
+text = "Default extensions :"
+selection_enabled = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SettingsWindow/VBoxContainer"]
-margin_top = 24.0
+margin_top = 39.0
 margin_right = 628.0
-margin_bottom = 48.0
+margin_bottom = 63.0
 
 [node name="extensions" type="Label" parent="SettingsWindow/VBoxContainer/HBoxContainer2"]
 margin_top = 5.0
@@ -447,6 +453,22 @@ margin_left = 142.0
 margin_right = 628.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SettingsWindow/VBoxContainer"]
+margin_top = 67.0
+margin_right = 628.0
+margin_bottom = 91.0
+
+[node name="CheckBox" type="CheckBox" parent="SettingsWindow/VBoxContainer/HBoxContainer3"]
+margin_right = 24.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="SettingsWindow/VBoxContainer/HBoxContainer3"]
+margin_left = 28.0
+margin_top = 5.0
+margin_right = 227.0
+margin_bottom = 19.0
+text = "Check extension for single files"
 
 [connection signal="refreshed" from="ImageDisplay" to="." method="_on_ImageDisplay_refreshed"]
 [connection signal="dir_selected" from="ImageDisplay/FileDialog" to="ImageDisplay" method="_on_FileDialog_dir_selected"]
@@ -479,3 +501,4 @@ size_flags_horizontal = 3
 [connection signal="value_changed" from="SettingsWindow/VBoxContainer/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="value_changed" from="SettingsWindow/VBoxContainer/HBoxContainer/HSlider" to="SettingsWindow" method="_on_HSlider_value_changed"]
 [connection signal="text_changed" from="SettingsWindow/VBoxContainer/HBoxContainer2/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="toggled" from="SettingsWindow/VBoxContainer/HBoxContainer3/CheckBox" to="." method="_on_CheckBox_toggled"]
