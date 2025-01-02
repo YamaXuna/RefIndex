@@ -1,17 +1,19 @@
 extends PanelContainer
 
 
+signal menu_opened(item)
+signal refreshed()
+
+
 const ImageItem = preload("res://scenes/ImageItem.tscn")
 
 export var img_size := 200
 export(String) var supported_formats := "png,bmp,dds,exr,hdr,jpg,jpeg,webp,svg"
-var additional_formats := ""
+
 export(bool) var check_extension_for_single_files := false
 
-signal menu_opened(item)
 
-onready var supported_extensions : Array 
-
+ 
 onready var file_select := $FileDialog
 onready var image_grid := $VBoxContainer/ScrollContainer/GridContainer
 onready var alert_popup := $AlertPopup
@@ -19,10 +21,11 @@ onready var info_text := $VBoxContainer/bottom_bar/info
 onready var popup_menu := $PopupMenu
 
 
+var supported_extensions : Array
+
 var selected_items := []
 var paths_to_add := []
 
-var shrek = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -32,10 +35,11 @@ func _ready():
 
 func set_supported_extensions()->void:
 	var exts := supported_formats.split(",")
-	
+	var additional_formats = UTILS.get_app_resources()["additional_extensions"]
 	exts.append_array(additional_formats.replace(".", "").split(","))
 	
 	supported_extensions = exts
+	print("Supported file extensions : ", supported_extensions)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -77,7 +81,18 @@ func refresh_items(filters : Array = [])->void:
 		items = DATA.get_all()
 	for item in items:
 		add_item(item["path"])
-	
+	emit_signal("refreshed")
+
+
+func hide_if_not_contains(text : String)->void:
+	for item in image_grid.get_children():
+		if text.empty():
+			item.show()
+		elif not text.to_lower() in item.image_path.to_lower():
+			item.hide()
+		elif not item.visible:
+			item.show()
+
 
 
 func add_item(path : String)->void:
@@ -219,10 +234,6 @@ func _on_deselect_pressed():
 
 func _on_selectAll_pressed():
 	for item in image_grid.get_children():
-		item.select()
-		selected_items.append(item)
-
-
-func _on_LineEdit_text_changed(new_text):
-	additional_formats = new_text
-	set_supported_extensions()
+		if item.visible:
+			item.select()
+			selected_items.append(item)

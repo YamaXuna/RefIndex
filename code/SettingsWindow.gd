@@ -4,6 +4,7 @@ extends WindowDialog
 onready var slider := $VBoxContainer/HBoxContainer/HSlider
 onready var icon_size_label := $VBoxContainer/HBoxContainer/Label
 onready var extensions_text := $VBoxContainer/HBoxContainer2/LineEdit
+onready var default_extensions_label := $VBoxContainer/DefaultExtensions
 
 
 # Called when the node enters the scene tree for the first time.
@@ -16,6 +17,7 @@ func set_icon_size_text(size : int)->void:
 
 
 func show():
+	default_extensions_label.text = "Supported formats : %s" % [""]
 	extensions_text.text = UTILS.get_app_resources()["additional_extensions"]
 	set_icon_size_text(slider.value)
 	.show()

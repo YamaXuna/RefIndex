@@ -9,18 +9,18 @@ onready var app_ressources : Resource = get_app_resources()
 
 
 
-func for_each_files(var root_path:String, var on_file:FuncRef):
+func for_each_files(var root_path : String, var on_file : FuncRef):
 	"""
 	Helper function to iterate files
 	"""
-	var path:Array=[root_path]
-	var dirs:Array=[]
+	var path := [root_path]
+	var dirs := []
 	while(!path.empty()):
 		if len(path) > len(dirs):
 			var full_path = ""
 			for p in path:
 				full_path += p + "/"
-			var dir:Directory=Directory.new()
+			var dir : Directory=Directory.new()
 			if dir.open(full_path) != OK:
 				print("Error occurred when trying to access " + full_path)
 				path.pop_back()

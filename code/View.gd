@@ -13,6 +13,7 @@ onready var filter_button := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxCont
 onready var filter_menu := $ImageDisplay/VBoxContainer2
 onready var filter_list := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/filters
 onready var settings := $SettingsWindow
+onready var search_line_edit := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/Search
 
 
 var current_menu_items : Array
@@ -207,7 +208,16 @@ func _on_HSlider_value_changed(value):
 
 func _on_LineEdit_text_changed(new_text):
 	UTILS.set_app_resource("additional_extensions", new_text)
+	image_display.set_supported_extensions()
 
 
 func _on_data_has_tags(state)->void:
 	filter_button.disabled = not state
+
+
+func _on_Search_text_changed(new_text):
+	image_display.hide_if_not_contains(new_text)
+
+
+func _on_ImageDisplay_refreshed():
+	image_display.hide_if_not_contains(search_line_edit.text)

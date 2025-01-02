@@ -49,8 +49,8 @@ text = "add"
 margin_left = 39.0
 margin_right = 105.0
 margin_bottom = 20.0
-hint_tooltip = "add all files of a folder
-already imported files will be ignored"
+hint_tooltip = "add all files of a folder.
+already imported files will be ignored (see supported extensions)"
 text = "bulk add"
 
 [node name="VSeparator" type="VSeparator" parent="ImageDisplay/VBoxContainer/toolbar"]
@@ -97,6 +97,7 @@ margin_bottom = 20.0
 margin_left = 507.0
 margin_right = 631.0
 margin_bottom = 20.0
+hint_tooltip = "Add the current selection to the files to be used as references for the current session."
 text = "add to references"
 
 [node name="dump" type="Button" parent="ImageDisplay/VBoxContainer/toolbar"]
@@ -119,33 +120,40 @@ text = "settings"
 [node name="HBoxContainer2" type="HBoxContainer" parent="ImageDisplay/VBoxContainer"]
 margin_top = 24.0
 margin_right = 1010.0
-margin_bottom = 44.0
+margin_bottom = 48.0
 
 [node name="number" type="Label" parent="ImageDisplay/VBoxContainer/HBoxContainer2"]
-margin_top = 3.0
-margin_bottom = 17.0
+margin_top = 5.0
+margin_bottom = 19.0
 align = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ImageDisplay/VBoxContainer/HBoxContainer2"]
 margin_left = 4.0
 margin_right = 1010.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="filters" type="HFlowContainer" parent="ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer"]
-margin_right = 953.0
-margin_bottom = 20.0
+margin_right = 749.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
+
+[node name="Search" type="LineEdit" parent="ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer"]
+margin_left = 753.0
+margin_right = 953.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 200, 0 )
+placeholder_text = "Search images and/or tags"
 
 [node name="filterMenu" type="Button" parent="ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer"]
 margin_left = 957.0
 margin_right = 1006.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 disabled = true
 text = "filters"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ImageDisplay/VBoxContainer"]
-margin_top = 48.0
+margin_top = 52.0
 margin_right = 1010.0
 margin_bottom = 568.0
 size_flags_horizontal = 3
@@ -153,7 +161,7 @@ size_flags_vertical = 3
 
 [node name="GridContainer" type="HFlowContainer" parent="ImageDisplay/VBoxContainer/ScrollContainer"]
 margin_right = 1010.0
-margin_bottom = 520.0
+margin_bottom = 516.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -377,6 +385,7 @@ margin_bottom = 20.0
 text = "Confirm"
 
 [node name="SettingsWindow" type="WindowDialog" parent="."]
+visible = true
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -414,10 +423,15 @@ min_value = 50.0
 max_value = 500.0
 value = 50.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SettingsWindow/VBoxContainer"]
+[node name="DefaultExtensions" type="RichTextLabel" parent="SettingsWindow/VBoxContainer"]
 margin_top = 20.0
 margin_right = 628.0
-margin_bottom = 44.0
+margin_bottom = 20.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SettingsWindow/VBoxContainer"]
+margin_top = 24.0
+margin_right = 628.0
+margin_bottom = 48.0
 
 [node name="extensions" type="Label" parent="SettingsWindow/VBoxContainer/HBoxContainer2"]
 margin_top = 5.0
@@ -425,6 +439,7 @@ margin_right = 138.0
 margin_bottom = 19.0
 hint_tooltip = "Specifies extensions to be accepted by the bulk add options.  List the extensions you wish separated by commas.
 Note that manually add files supports all extensions"
+mouse_filter = 1
 text = "Additional Extensions"
 
 [node name="LineEdit" type="LineEdit" parent="SettingsWindow/VBoxContainer/HBoxContainer2"]
@@ -433,6 +448,7 @@ margin_right = 628.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
+[connection signal="refreshed" from="ImageDisplay" to="." method="_on_ImageDisplay_refreshed"]
 [connection signal="dir_selected" from="ImageDisplay/FileDialog" to="ImageDisplay" method="_on_FileDialog_dir_selected"]
 [connection signal="file_selected" from="ImageDisplay/FileDialog" to="ImageDisplay" method="_on_FileDialog_file_selected"]
 [connection signal="files_selected" from="ImageDisplay/FileDialog" to="ImageDisplay" method="_on_FileDialog_files_selected"]
@@ -445,6 +461,7 @@ size_flags_horizontal = 3
 [connection signal="pressed" from="ImageDisplay/VBoxContainer/toolbar/addRef" to="." method="_on_addRef_pressed"]
 [connection signal="pressed" from="ImageDisplay/VBoxContainer/toolbar/dump" to="." method="_on_dump_pressed"]
 [connection signal="pressed" from="ImageDisplay/VBoxContainer/toolbar/settings" to="." method="_on_settings_pressed"]
+[connection signal="text_changed" from="ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/Search" to="." method="_on_Search_text_changed"]
 [connection signal="pressed" from="ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/filterMenu" to="." method="_on_filterMenu_pressed"]
 [connection signal="child_entered_tree" from="ImageDisplay/VBoxContainer/ScrollContainer/GridContainer" to="." method="_on_GridContainer_child_entered_tree"]
 [connection signal="child_exiting_tree" from="ImageDisplay/VBoxContainer/ScrollContainer/GridContainer" to="." method="_on_GridContainer_child_exiting_tree"]
@@ -462,4 +479,3 @@ size_flags_horizontal = 3
 [connection signal="value_changed" from="SettingsWindow/VBoxContainer/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="value_changed" from="SettingsWindow/VBoxContainer/HBoxContainer/HSlider" to="SettingsWindow" method="_on_HSlider_value_changed"]
 [connection signal="text_changed" from="SettingsWindow/VBoxContainer/HBoxContainer2/LineEdit" to="." method="_on_LineEdit_text_changed"]
-[connection signal="text_changed" from="SettingsWindow/VBoxContainer/HBoxContainer2/LineEdit" to="ImageDisplay" method="_on_LineEdit_text_changed"]
