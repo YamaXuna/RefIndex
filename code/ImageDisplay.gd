@@ -86,7 +86,9 @@ func hide_if_not_contains(text : String)->void:
 	for item in image_grid.get_children():
 		if text.empty():
 			item.show()
-		elif not text.to_lower() in item.image_path.to_lower():
+		elif not text.to_lower() in item.image_path.to_lower() and (
+			not text.to_lower() in item.image_name.to_lower()
+		):
 			item.hide()
 		elif not item.visible:
 			item.show()
