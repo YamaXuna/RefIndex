@@ -146,8 +146,11 @@ func purge_references(dir : Directory)->void:
 				else:
 					print("purged : " + file_name)
 			file_name = dir.get_next()
+	elif not dir.dir_exists("references"):
+		print("references dir does not exists")
+		return
 	else:
-		print("An error occurred when trying to access the path.")
+		print("An error occurred when trying to access the references path.")
 	print("purge complete")
 
 
@@ -155,6 +158,7 @@ func open_ref_dir()->void:
 	match OS.get_name():
 		"Windows":
 			var out = []
+			# the start command didn't worked when typed here directly
 			var __ = OS.execute("data\\open.bat", [], false, out)
 		"X11":
 			var __ = OS.execute("xdg-open", ["references/"])
