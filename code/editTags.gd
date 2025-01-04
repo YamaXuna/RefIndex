@@ -68,12 +68,14 @@ func reset()->void:
 func reset_single()->void:
 	reset_common()
 	image_path.text = image_item.image_path
-	image_name.text = image_item.image_path.get_file()
+	image_name.text = image_item.image_name.get_file()
+	image_name.show()
 
 
 func reset_multi()->void:
 	reset_common()
 	image_name.text = ""
+	image_name.hide()
 	image_path.text = "%s elements selected" % [len(items)]
 
 
@@ -122,6 +124,11 @@ func _on_validate_pressed():
 			remove_tags_from_image(path, new_tags)
 		#TODO add a confirm popup
 	else:
+		if image_item.image_name != image_name.text:
+			DATA.set_image_name(image_item.image_path, image_name.text)
+			image_item.image_name = image_name.text
+			image_item.set_name_display()
+
 		remove_tags_from_image(image_item.image_path, new_tags)
 
 	hide()

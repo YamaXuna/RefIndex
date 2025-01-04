@@ -11,7 +11,8 @@ signal right_clicked(item)
 
 export var img_size := 200
 export var name_max_length := 35
-export(String) var image_path := ""
+export var image_path := ""
+export var image_name := ""
 
 
 var default_texture = preload("res://icon.png")
@@ -37,7 +38,7 @@ var texture : Texture
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	set_path_display()
+	set_name_display()
 
 
 func select()->void:
@@ -50,8 +51,8 @@ func deselect()->void:
 	image_display.modulate = Color.white
 
 
-func set_path_display()->void:
-	label.text = image_path.get_file().substr(0, name_max_length)
+func set_name_display()->void:
+	label.text = image_name.get_file().substr(0, name_max_length).capitalize()
 	hint_tooltip = image_path
 
 

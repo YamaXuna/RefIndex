@@ -171,10 +171,17 @@ func remove_tag_from_image(image_path : String, tag_name : String)->void:
 		[image_path, tag_name.to_lower()])
 
 
+func set_image_name(image_path : String, new_name : String)->void:
+	if not is_in_db(image_path):
+		return
+	db.query_with_bindings("update image set name = ? " +
+		"where path = ?", [new_name.to_lower(), image_path])
+
+
 ### get ###
 
 func get_all()->Array:
-	db.query("select path from image order by lower(name)")
+	db.query("select path, name from image order by lower(name)")
 	return db.query_result
 
 

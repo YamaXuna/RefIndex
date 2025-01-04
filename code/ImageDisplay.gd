@@ -78,7 +78,7 @@ func refresh_items(filters : Array = [])->void:
 	else:
 		items = DATA.get_all()
 	for item in items:
-		add_item(item["path"])
+		add_item(item["path"], item["name"])
 	emit_signal("refreshed")
 
 
@@ -93,10 +93,11 @@ func hide_if_not_contains(text : String)->void:
 
 
 
-func add_item(path : String)->void:
+func add_item(path : String, image_name : String)->void:
 	var new_item := ImageItem.instance()
 	new_item.image_path = path
 	new_item.img_size = img_size
+	new_item.image_name = image_name
 	image_grid.add_child(new_item)
 	new_item.set_image_scale()
 	var __ = new_item.connect("left_clicked", self, "_on_item_left_clicked")
@@ -111,7 +112,7 @@ func on_new_file(path : String, alert :bool = false)->bool:
 		set_info_text_to("add failed")
 		show_alert(path + " is already registered")
 		return false
-	add_item(path)
+	add_item(path, path)
 	DATA.add_image(path)
 	
 	return true
@@ -186,7 +187,7 @@ func _on_FileDialog_dir_selected(path):
 	var i := 0
 	for path in paths_to_add:
 		if not DATA.is_in_db(path):
-			add_item(path)
+			add_item(path, path)
 			i += 1
 	
 	DATA.add_many(paths_to_add)

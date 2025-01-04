@@ -144,6 +144,7 @@ margin_right = 953.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 200, 0 )
 placeholder_text = "Search images"
+caret_blink = true
 
 [node name="filterMenu" type="Button" parent="ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer"]
 margin_left = 957.0
@@ -174,11 +175,10 @@ margin_bottom = 586.0
 margin_bottom = 14.0
 
 [node name="AlertPopup" type="AcceptDialog" parent="ImageDisplay"]
-visible = true
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 512.0
-margin_bottom = 300.0
+margin_right = 1017.0
+margin_bottom = 593.0
 popup_exclusive = true
 window_title = "Alerte !"
 resizable = true
@@ -317,6 +317,7 @@ margin_top = -20.0
 text = "Close"
 
 [node name="editTags" type="WindowDialog" parent="."]
+visible = true
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -354,10 +355,11 @@ texture = ExtResource( 4 )
 expand = true
 stretch_mode = 1
 
-[node name="name" type="Label" parent="editTags/HBoxContainer/VBoxContainer"]
+[node name="name" type="LineEdit" parent="editTags/HBoxContainer/VBoxContainer"]
 margin_top = 322.0
 margin_right = 300.0
-margin_bottom = 336.0
+margin_bottom = 346.0
+caret_blink = true
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="editTags/HBoxContainer"]
 margin_left = 304.0
