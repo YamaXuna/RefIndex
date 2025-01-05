@@ -34,7 +34,8 @@ func set_supported_extensions()->void:
 	var supported_formats : String = UTILS.get_app_resources()["default_extensions"]
 	var exts := supported_formats.split(",")
 	var additional_formats = UTILS.get_app_resources()["additional_extensions"]
-	exts.append_array(additional_formats.replace(".", "").split(","))
+	if len(additional_formats) > 0:
+		exts.append_array(additional_formats.replace(".", "").split(","))
 	
 	supported_extensions = exts
 	print("Supported file extensions : ", supported_extensions)
@@ -82,16 +83,20 @@ func refresh_items(filters : Array = [])->void:
 	emit_signal("refreshed")
 
 
-func hide_if_not_contains(text : String)->void:
+func hide_if_not_contains(text : String)->int:
+	var i := 0
 	for item in image_grid.get_children():
 		if text.empty():
 			item.show()
-		elif not text.to_lower() in item.image_path.to_lower() and (
+		elif not text.to_lower() in item.image_path.to_lower().get_file() and (
 			not text.to_lower() in item.image_name.to_lower()
 		):
 			item.hide()
+			continue
 		elif not item.visible:
 			item.show()
+		i += 1
+	return i
 
 
 
@@ -136,6 +141,16 @@ func clear_selection()->void:
 	for item in selected_items:
 		item.deselect()
 	selected_items.clear()
+
+
+func get_visible_items()->Array:
+	var a := []
+	
+	for item in image_grid.get_children():
+		if item.visible:
+			a.append(a)
+	
+	return a
 
 
 func _on_add_pressed():

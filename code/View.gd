@@ -14,6 +14,7 @@ onready var filter_menu := $ImageDisplay/VBoxContainer2
 onready var filter_list := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/filters
 onready var settings := $SettingsWindow
 onready var search_line_edit := $ImageDisplay/VBoxContainer/HBoxContainer2/HBoxContainer/Search
+onready var file_dialog := $ImageDisplay/FileDialog
 
 
 var current_menu_items : Array
@@ -35,6 +36,17 @@ func _ready():
 	image_display.set_icon_size(UTILS.get_app_resources()["icon_size"])
 	
 	filter_button.disabled = DATA.nb_tags() == 0
+	
+	set_file_dialog_filter()
+
+
+func set_file_dialog_filter()->void:
+	var filter_str := ""
+	for _i in range(len(image_display.supported_extensions) - 1):
+		filter_str += "*.%, "
+	filter_str += "*.% ; Supported Files (see settings)"
+	filter_str = filter_str.format(image_display.supported_extensions, "%")
+	file_dialog.filters =  [filter_str]
 
 
 func load_images()->void:
@@ -75,12 +87,13 @@ func set_filters()->void:
 
 
 
+
 func _on_GridContainer_child_entered_tree(_node):
-	images_number.text = str(image_grid.get_child_count()) + " elements"
+	images_number.text = str(len(image_display.get_visible_items())) + " elements"
 
 
 func _on_GridContainer_child_exiting_tree(_node):
-	images_number.text = str(image_grid.get_child_count() - 1) + " elements"
+	images_number.text = str(len(image_display.get_visible_items()) - 1) + " elements"
 
 
 func _on_PopupMenu_id_pressed(id):
@@ -142,7 +155,7 @@ func purge_references(dir : Directory)->void:
 			if not dir.current_is_dir() and not file_name == ".gdignore":
 				err = dir.remove(file_name)
 				if err != OK:
-					print(file_name + " not purged")
+					push_warning("failed to purge : " + file_name)
 				else:
 					print("purged : " + file_name)
 			file_name = dir.get_next()
@@ -150,7 +163,7 @@ func purge_references(dir : Directory)->void:
 		print("references dir does not exists")
 		return
 	else:
-		print("An error occurred when trying to access the references path.")
+		push_error("An error occurred when trying to access the references path.")
 	print("purge complete")
 
 
@@ -185,7 +198,7 @@ func _on_dump_pressed():
 		var err = dir.copy(image, path + "/" + image.get_file())
 		
 		if err != OK:
-			print("failed to dump " + image + " to " + path + "/" + image.get_file())
+			push_error("failed to dump " + image + " to " + path + "/" + image.get_file())
 		else:
 			i += 1
 	
@@ -203,7 +216,8 @@ func _notification(what: int) -> void:
 
 func _on_settings_pressed():
 	settings.slider.value = image_display.img_size
-	settings.show()
+	settings.popup_exclusive = true
+	settings.popup()
 
 
 func _on_HSlider_value_changed(value):
@@ -213,6 +227,7 @@ func _on_HSlider_value_changed(value):
 func _on_LineEdit_text_changed(new_text):
 	UTILS.set_app_resource("additional_extensions", new_text)
 	image_display.set_supported_extensions()
+	set_file_dialog_filter()
 
 
 func _on_data_has_tags(state)->void:
@@ -220,7 +235,9 @@ func _on_data_has_tags(state)->void:
 
 
 func _on_Search_text_changed(new_text):
-	image_display.hide_if_not_contains(new_text)
+	var i : int = image_display.hide_if_not_contains(new_text)
+	images_number.text = str(i) + " elements"
+	images_number.update()
 
 
 func _on_ImageDisplay_refreshed():
@@ -230,3 +247,4 @@ func _on_ImageDisplay_refreshed():
 func _on_CheckBox_toggled(button_pressed):
 	UTILS.set_app_resource("check_extension_for_single_files", button_pressed)
 	image_display.check_extension_for_single_files = button_pressed
+

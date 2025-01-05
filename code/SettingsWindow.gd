@@ -17,13 +17,13 @@ func set_icon_size_text(size : int)->void:
 	icon_size_label.text = "Icon Size : " + str(size)
 
 
-func show():
+func popup(rect : Rect2 = Rect2(0, 0, 0, 0)):
 	default_extensions_label.text = "Supported formats : %s" % [UTILS.get_app_resources()[
 		"default_extensions"]]
 	extensions_text.text = UTILS.get_app_resources()["additional_extensions"]
 	check_extension_box.pressed = UTILS.get_app_resources()["check_extension_for_single_files"]
 	set_icon_size_text(slider.value)
-	.show()
+	.popup(rect)
 
 
 func _on_HSlider_value_changed(value):
